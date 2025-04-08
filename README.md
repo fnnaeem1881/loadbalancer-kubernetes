@@ -97,38 +97,37 @@ nodejs-k8s-loadbalancer/
 
 2. **Build Docker Image**
    ```bash
-   docker build -t nodejs-loadbalancer-demo:latest .
+   docker build -t naeem1881/nodejs-loadbalancer-demo:latest .
    ```
 
 ## ⚙️ Step 3: Set Up Kubernetes Deployment & Service
 1. **Create `k8s/deployment.yaml`**
    ```yaml
    apiVersion: apps/v1
-   kind: Deployment
-   metadata:
-     name: nodejs-app
-   spec:
-     replicas: 3
-     selector:
-       matchLabels:
-         app: nodejs-app
-     template:
-       metadata:
-         labels:
-           app: nodejs-app
-       spec:
-         containers:
-         - name: nodejs-app
-           image: nodejs-loadbalancer-demo:latest
-           imagePullPolicy: Never  # Use local image (for Minikube)
-           ports:
-           - containerPort: 3000
-           readinessProbe:
-             httpGet:
-               path: /health
-               port: 3000
-             initialDelaySeconds: 5
-             periodSeconds: 5
+    kind: Deployment
+    metadata:
+      name: nodejs-app
+    spec:
+      replicas: 3
+      selector:
+        matchLabels:
+          app: nodejs-app
+      template:
+        metadata:
+          labels:
+            app: nodejs-app
+        spec:
+          containers:
+          - name: nodejs-app
+            image: naeem1881/nodejs-loadbalancer-demo:latest
+            ports:
+            - containerPort: 3000
+            readinessProbe:
+              httpGet:
+                path: /health
+                port: 3000
+              initialDelaySeconds: 5
+              periodSeconds: 5
    ```
 
 2. **Create `k8s/service.yaml` (LoadBalancer)**
